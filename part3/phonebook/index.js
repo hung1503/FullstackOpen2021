@@ -4,8 +4,7 @@ import cors from 'cors'
 
 const app = express()
 app.use(express.json())
-app.use(cors())
-
+app.use(express.static('build'))
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method)
   console.log('Path:  ', request.path)
@@ -16,6 +15,8 @@ const requestLogger = (request, response, next) => {
 
 app.use(requestLogger);
 app.use(morgan('tiny'));
+app.use(cors())
+
 
 morgan.token('param', function(req) { return JSON.stringify(req.body) })
 let persons = [
@@ -44,10 +45,6 @@ const generateId = () => {
   const randomId = Math.floor(Math.random() * 10000)
   return randomId 
 }
-
-app.get('/', (request, response) => {
-  response.send('<h1>Hello World!</h1>')
-})
 
 app.get('/api/persons', (request, response) => {
   response.json(persons)
