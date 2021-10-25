@@ -1,10 +1,14 @@
-import express, { request } from "express"
-import morgan from "morgan"
-import cors from 'cors'
+require('dotenv').config()
+const express = require('express');
+const morgan = require('morgan')
+const cors = require('cors')
+const Phonebook = require('./models/phonebook') 
 
 const app = express()
-app.use(express.json())
+
 app.use(express.static('build'))
+app.use(express.json())
+
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method)
   console.log('Path:  ', request.path)
@@ -17,62 +21,45 @@ app.use(requestLogger);
 app.use(morgan('tiny'));
 app.use(cors())
 
-
 morgan.token('param', function(req) { return JSON.stringify(req.body) })
-let persons = [
-  { 
-    "id": 1,
-    "name": "Arto Hellas", 
-    "number": "040-123456"
-  },
-  { 
-    "id": 2,
-    "name": "Ada Lovelace", 
-    "number": "39-44-5323523"
-  },
-  { 
-    "id": 3,
-    "name": "Dan Abramov", 
-    "number": "12-43-234345"
-  },
-  { 
-    "id": 4,
-    "name": "Mary Poppendieck", 
-    "number": "39-23-6423122"
-  }
-]
-const generateId = () => {
-  const randomId = Math.floor(Math.random() * 10000)
-  return randomId 
-}
 
 app.get('/api/persons', (request, response) => {
-  response.json(persons)
+  Phonebook.find({}).then(per => {
+      response.json(per)
+  })
 })
 
 app.get('/info', (request, response) => {
   const currentDate = Date().toLocaleString()
-  const numberPeople = persons.length
-
-  response.send('Phone book has info for ' + numberPeople + ' people <br>' + currentDate );
+  Phonebook.find({}).then(person => {
+    const num = person.length;
+    response.send(
+      `<div>
+        <p>Phonebook has info for ${num} people</p>
+        <p>${currentDate}</p>
+      </div>`
+    )
+  })
 })
 
-app.get('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id);
-  const info = persons.find(i => i.id === id)
-  console.log(id)
-  if(info) {
-    response.json(info)
-  } else {
-    response.status(404).end()
-  }
+app.get('/api/persons/:id', (request, response, next) => {
+  Phonebook.findById(request.params.id)
+    .then(person => {
+      if(person){
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
+  })
+  .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-  const id = Number(request.params.id);
-  const info = persons.find(i => i.id === id)
-
-  response.status(204).end()
+  Phonebook.findByIdAndDelete(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response) => {
@@ -92,18 +79,50 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  const info = {    
-    id: generateId(),
+  const info = new Phonebook({    
     name: body.name,
     number: body.number, 
-  }
+  })
 
-  persons = persons.concat(info)
-  console.log(info)
-  response.json(info)
+  info.save().then(savedPer => {
+    response.json(savedPer)
+  })
 })
 
-const PORT = process.env.PORT || 3001
+app.put('api/persons/:id', (request, response, next) => {
+  const body = request.body
+
+  const person = {
+    name: body.name,
+    number: body.number
+  }
+
+  Phonebook.findByIdAndUpdate(request.params.id, person, {new: true})
+    .then(updatedPer => {
+      response.json(updatedPer)
+    })
+    .catch(error => next(error))
+})
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } 
+
+  next(error)
+}
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+app.use(errorHandler)
+
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
