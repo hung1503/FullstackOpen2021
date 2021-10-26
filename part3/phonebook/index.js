@@ -8,6 +8,19 @@ const app = express()
 
 app.use(express.static('build'))
 app.use(express.json())
+app.use(cors())
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
+
+  next(error)
+}
 
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method)
@@ -19,7 +32,7 @@ const requestLogger = (request, response, next) => {
 
 app.use(requestLogger);
 app.use(morgan('tiny'));
-app.use(cors())
+
 
 morgan.token('param', function(req) { return JSON.stringify(req.body) })
 
@@ -62,31 +75,27 @@ app.delete('/api/persons/:id', (request, response) => {
     .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const body = request.body
-  const sameName = persons.find(per => per.name === body.name)
-  if(!body.name) {
+
+  if(body.name === undefined) {
     return response.status(400).json({ 
       error: 'name missing' 
     })
-  } else if (!body.number) {
-    return response.status(400).json({ 
-      error: 'number missing' 
-    })
-  } else if(sameName) {
-    return response.status(400).json({ 
-      error: 'name must be unique' 
-    })
-  }
+  } 
 
   const info = new Phonebook({    
     name: body.name,
     number: body.number, 
   })
 
-  info.save().then(savedPer => {
-    response.json(savedPer)
-  })
+  info
+    .save()
+    .then(savedPer => savedPer.toJSON())
+    .then(savedAndFormattedPer => {
+      response.json(savedAndFormattedPer)
+    })
+  .catch(error => next(error))
 })
 
 app.put('api/persons/:id', (request, response, next) => {
@@ -103,16 +112,6 @@ app.put('api/persons/:id', (request, response, next) => {
     })
     .catch(error => next(error))
 })
-
-const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
-
-  if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' })
-  } 
-
-  next(error)
-}
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
