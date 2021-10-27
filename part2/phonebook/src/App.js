@@ -31,9 +31,32 @@ const App = () => {
       name: newName,
       number: newNumber
     }
+    if(newNumber.length < 3){
+      setNoti({
+        text: `${newName} is too short, please provide a name with at least 3 digits`,
+        type: "error"
+      })
+      setTimeout(() => {
+        setNoti(null);
+      }, 5000);
+      return;
+    }
+
     const foundId = persons.find(per => per.name === listObj.name)
     if(foundId) {
       const newNum = {...foundId, number: listObj.number} ;
+
+      if(newNumber < 8) {
+        setNoti({
+          text: `number is too short, please provide a number with at least 8 digits`,
+          type: "error"
+        })
+        setTimeout(() => {
+          setNoti(null);
+        }, 5000);
+        return;
+      }
+
       const msg = listObj.name + ' is already added to phonebook, replace the old number with a new one?';
       if(window.confirm(msg) === true) {
         phoneService
