@@ -1,8 +1,8 @@
 require('dotenv').config()
-const express = require('express');
+const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
-const Phonebook = require('./models/phonebook') 
+const Phonebook = require('./models/phonebook')
 
 const app = express()
 
@@ -30,22 +30,22 @@ const requestLogger = (request, response, next) => {
   next()
 }
 
-app.use(requestLogger);
-app.use(morgan('tiny'));
+app.use(requestLogger)
+app.use(morgan('tiny'))
 
 
 morgan.token('param', function(req) { return JSON.stringify(req.body) })
 
 app.get('/api/persons', (request, response) => {
   Phonebook.find({}).then(per => {
-      response.json(per)
+    response.json(per)
   })
 })
 
 app.get('/info', (request, response) => {
   const currentDate = Date().toLocaleString()
   Phonebook.find({}).then(person => {
-    const num = person.length;
+    const num = person.length
     response.send(
       `<div>
         <p>Phonebook has info for ${num} people</p>
@@ -63,13 +63,13 @@ app.get('/api/persons/:id', (request, response, next) => {
       } else {
         response.status(404).end()
       }
-  })
-  .catch(error => next(error))
+    })
+    .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
   Phonebook.findByIdAndDelete(request.params.id)
-    .then(result => {
+    .then(() => {
       response.status(204).end()
     })
     .catch(error => next(error))
@@ -79,14 +79,14 @@ app.post('/api/persons', (request, response, next) => {
   const body = request.body
 
   if(body.name === undefined) {
-    return response.status(400).json({ 
-      error: 'name missing' 
+    return response.status(400).json({
+      error: 'name missing'
     })
-  } 
+  }
 
-  const info = new Phonebook({    
+  const info = new Phonebook({
     name: body.name,
-    number: body.number, 
+    number: body.number,
   })
 
   info
@@ -95,7 +95,7 @@ app.post('/api/persons', (request, response, next) => {
     .then(savedAndFormattedPer => {
       response.json(savedAndFormattedPer)
     })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.put('api/persons/:id', (request, response, next) => {
@@ -106,7 +106,7 @@ app.put('api/persons/:id', (request, response, next) => {
     number: body.number
   }
 
-  Phonebook.findByIdAndUpdate(request.params.id, person, {new: true})
+  Phonebook.findByIdAndUpdate(request.params.id, person, { new: true } )
     .then(updatedPer => {
       response.json(updatedPer)
     })
