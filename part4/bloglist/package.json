@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose",
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
@@ -19,5 +19,12 @@
     "mongoose": "^6.0.12",
     "node-modules": "^1.0.1",
     "nodemon": "^2.0.14"
+  },
+  "devDependencies": {
+    "eslint": "^8.1.0",
+    "jest": "^27.3.1"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
