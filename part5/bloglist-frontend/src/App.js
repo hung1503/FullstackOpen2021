@@ -79,7 +79,7 @@ const App = () => {
     if (window.confirm(msg) === true) {
       blogService
         .remove(id)
-        .then(returnedBlog => {
+        .then(() => {
           setBlogs(blogs.filter(blog => blog.id !== id))
           setNoti({
             text: `blog ${blogToRemove.title} by ${blogToRemove.author} removed`,

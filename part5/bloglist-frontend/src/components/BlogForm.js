@@ -19,16 +19,16 @@ const BlogForm = ({ createBlog }) => {
     }
 
     return (
-        <div>
+        <div className="formDiv">
         <h2>Create a new blog</h2>
         <form onSubmit={addBlog}>
             <div>
             title
-            <input value={title} onChange={({ target }) => setTitle(target.value)}/>
+            <input className="title" value={title} onChange={({ target }) => setTitle(target.value)}/>
             </div>
             <div>
             author
-            <input value={author} onChange={({ target }) => setAuthor(target.value)}/>
+            <input className="author" value={author} onChange={({ target }) => setAuthor(target.value)}/>
             </div>
             <div>
             url

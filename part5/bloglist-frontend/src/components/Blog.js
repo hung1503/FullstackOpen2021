@@ -21,19 +21,19 @@ const Blog = ({ blog, addLike, removeBlog, user }) => {
 
   const handleLike = () => {
     const blogObject = {
-      user: blog.user.id || blog.user,
+      user: blog.user?.id || blog.user,
       likes: blog.likes + 1,
       author: blog.author,
       title: blog.title,
       url: blog.url
     }
-    setUsername(blog.user.username || username)
+    setUsername(blog.user?.username || username)
     addLike(blog.id ,blogObject)
   }
 
   return (
-    <div style={blogStyle}>
-      <div style={hideWhenVisible}>
+    <div style={blogStyle} className={blog}>
+      <div style={hideWhenVisible} className="hiddenByDefault">
         <p>{blog.title} - {blog.author}
           <button onClick={toggleVisibility}>View</button>
         </p>
@@ -46,7 +46,7 @@ const Blog = ({ blog, addLike, removeBlog, user }) => {
         <p>Likes: {blog.likes}
           <button onClick={handleLike}>Like</button>
         </p>
-        {(user.username === blog.user.username ||
+        {(user.username === blog.user?.username ||
           user.username === username) &&
           <button onClick={() => removeBlog(blog.id)}>Remove</button>
         }

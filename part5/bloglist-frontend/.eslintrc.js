@@ -19,18 +19,10 @@ module.exports = {
     "plugins": [
         "react", "jest"
     ],
-    "rules": {
-        "indent": [
-            "error",
-            2  
-        ],
+    "rules": { 
         "linebreak-style": [
             "error",
             "windows"
-        ],
-        "quotes": [
-            "error",
-            "single"
         ],
         "semi": [
             "error",
