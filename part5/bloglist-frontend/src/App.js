@@ -161,7 +161,7 @@ const App = () => {
           <h2>All blogs</h2>
           <ul>
             {blogs
-              .sort((a, b) => a.likes - b.likes)
+              .sort((a, b) => b.likes - a.likes)
               .map((blog, i) =>
                 <Blog
                   key={i}
