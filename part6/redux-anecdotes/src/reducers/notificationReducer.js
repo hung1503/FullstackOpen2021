@@ -9,12 +9,19 @@ const notificatonReducer = (state = null, action) => {
     }
 }
 
-export const noti = (noti) => {
-    return {
-        type: 'SHOW_NOTI',
-        data: {
-            noti
-        }
+export const noti = (noti, time) => {
+    return async dispatch => {
+        dispatch({
+            type: 'SHOW_NOTI',
+            data: {
+                noti
+            }
+        })
+        setTimeout(() => {
+            dispatch({
+                type: 'HIDE_NOTI'
+            })
+        }, time)
     }
 }
 
