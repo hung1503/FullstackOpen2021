@@ -1,22 +1,20 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { filter } from '../reducers/filterReducer'
 
-const Filter = () => {
-    const dispatch = useDispatch()
-    const handleChange = (event) => {
-        dispatch(filter(event.target.value))
-    }
+const Filter = (props) => {
     const style = {
         marginBottom: 10
     }
 
     return (
         <div style={style}>
-        filter <input onChange={handleChange} />
+        filter <input onChange={(event) => props.filter(event.target.value)} />
         </div>
     )
 }
 
-
-export default Filter
+export default connect(
+    null,
+    { filter }
+)(Filter)

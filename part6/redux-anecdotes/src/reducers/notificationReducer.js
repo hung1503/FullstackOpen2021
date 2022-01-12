@@ -1,3 +1,5 @@
+let timeout;
+
 const notificatonReducer = (state = null, action) => {
     switch (action.type) {
         case 'SHOW_NOTI':
@@ -9,15 +11,17 @@ const notificatonReducer = (state = null, action) => {
     }
 }
 
+
 export const noti = (noti, time) => {
-    return async dispatch => {
+    return async (dispatch) => {
         dispatch({
             type: 'SHOW_NOTI',
             data: {
                 noti
             }
         })
-        setTimeout(() => {
+        clearTimeout(timeout)
+        timeout = setTimeout(() => {
             dispatch({
                 type: 'HIDE_NOTI'
             })
@@ -25,12 +29,9 @@ export const noti = (noti, time) => {
     }
 }
 
-export const hide = (noti) => {
+export const hide = () => {
     return {
         type: 'HIDE_NOTI',
-        data: {
-            noti
-        }
     }
 }
 
