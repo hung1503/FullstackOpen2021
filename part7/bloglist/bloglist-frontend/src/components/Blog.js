@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { likeBlog, removeBlog } from '../reducers/blogReducer'
+import { Link } from 'react-router-dom'
 
 const Blog = ({ blog, own }) => {
   const [visible, setVisible] = useState(false)
@@ -27,23 +28,11 @@ const Blog = ({ blog, own }) => {
     }
   }
 
-  const label = visible ? 'hide' : 'view'
-
   return (
     <div style={blogStyle} className='blog'>
       <div>
-        <i>{blog.title}</i> by {blog.author} <button onClick={() => setVisible(!visible)}>{label}</button>
+        <Link to={`/blogs/${blog.id}`}><i>{blog.title}</i> by {blog.author}</Link> 
       </div>
-      {visible&&(
-        <div>
-          <div>{blog.url}</div>
-          <div>likes {blog.likes}
-            <button onClick={()=>handleLike(blog)}>like</button>
-          </div>
-          <div>{blog.user.name}</div>
-          {own&&<button onClick={()=>handleRemove(blog)}>remove</button>}
-        </div>
-      )}
     </div>
   )
 }
