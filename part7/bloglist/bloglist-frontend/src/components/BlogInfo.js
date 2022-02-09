@@ -21,11 +21,14 @@ const BlogInfo = ({ blogInfo, own }) => {
     return (
         <div>
             <h2>{blogInfo.title}</h2>
-            <p>author:{blogInfo.author}</p>
-            <a href={blogInfo.url}>URL: {blogInfo.url}</a>
-            <p>{blogInfo.likes} likes <button onClick={()=>handleLike(blog)}>like</button></p>
-            <p>added by {blogInfo.user.name}</p>
-            {own&&<button onClick={()=>handleRemove(blog)}>remove</button>}
+            <ul>
+              <li>author:{blogInfo.author}</li>
+              <li><a href={blogInfo.url}>URL: {blogInfo.url}</a></li>
+              <li>{blogInfo.likes} likes <button onClick={()=>handleLike(blogInfo)}>like</button></li>
+              <li>added by {blogInfo.user.name}</li>
+              {own&&<button onClick={()=>handleRemove(blogInfo)}>remove</button>}
+            </ul>
+            
         </div>
     )
 }

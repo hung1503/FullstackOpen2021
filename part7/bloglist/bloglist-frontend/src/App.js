@@ -16,6 +16,7 @@ import { initializeBlogs, addBlog } from './reducers/blogReducer'
 import { getAllUsers } from './reducers/userReducer'
 
 import { Switch,  Route,  Link,  useRouteMatch } from 'react-router-dom'
+import { Table, Form, Button, Navbar, Nav, Container } from 'react-bootstrap'
 
 const App = () => {
   const [user, setUser] = useState(null)
@@ -70,7 +71,7 @@ const App = () => {
       setUser(user)
       dispatch(noti(`${user.name} welcome back!`, 5000, 'success'))
     } catch(exception) {
-      dispatch(noti('wrong username/password', 5000, 'error'))
+      dispatch(noti('wrong username/password', 5000, 'danger'))
     }
   }
 
@@ -86,65 +87,84 @@ const App = () => {
       dispatch(noti(`a new blog '${blog.title}' by ${blog.author} added!`, 5000, 'success'))
     } catch(exception) {
       console.log(exception)
-      dispatch(noti('something went wrong', 5000, 'error'))
+      dispatch(noti('something went wrong', 5000, 'danger'))
     }
   }
  
   if ( !user ) {
     return (
       <div>
-        <h2>login to application</h2>
+        <h2>Login to application</h2>
 
         <Notification />
 
-        <form onSubmit={handleLogin}>
-          <div>
-            username
-            <input
+        <Form onSubmit={handleLogin}>
+          <Form.Group>
+            <Form.Label>Username:</Form.Label>
+            <Form.Control
+              type="text"
+              name="username"
               id='username'
               value={username}
               onChange={({ target }) => setUsername(target.value)}
             />
-          </div>
-          <div>
-            password
-            <input
+            <Form.Label>Password:</Form.Label>
+            <Form.Control
+              type="password"
               id='password'
               value={password}
               onChange={({ target }) => setPassword(target.value)}
             />
-          </div>
-          <button id='login'>login</button>
-        </form>
+            <Button id="login" variant="primary" type="submit">
+              login
+            </Button>
+          </Form.Group>
+        </Form>
       </div>
     )
+  }
+  const text = {
+    textDecoration: 'none',
+    color: 'black'
   }
 
   const byLikes = (b1, b2) => b2.likes - b1.likes
 
   return (
     <div>
-      <div>
-        <Link to="/">Home</Link>
-        <Link to="/blogs">Blogs</Link>
-        <Link to="/users">Users</Link>
-        <Link to="/create">Create new</Link>
-      </div>
-
-      <h2>blogs</h2>
+      <Navbar collapseOnSelect bg="light" variant="light">
+        <Container>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Brand  >
+            <Link style={text} to="/">Blogs</Link>
+          </Navbar.Brand>
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className="mr-auto">
+              <Nav.Link  as="span">
+                <Link style={text} to="/">Home</Link>
+              </Nav.Link>
+              <Nav.Link as="span">
+                <Link style={text} to="/blogs">Blogs</Link>
+              </Nav.Link>
+              <Nav.Link as="span">
+                <Link style={text} to="/users">Users</Link>
+              </Nav.Link>
+              <Nav.Link as="span">
+                <Link style={text} to="/create">Create New</Link>
+              </Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+          {user.name} logged in <button onClick={handleLogout}>logout</button>
+        </Container>
+      </Navbar>
 
       <Notification />
-
-      <p>
-        {user.name} logged in <button onClick={handleLogout}>logout</button>
-      </p>
 
       <Switch>
         <Route path="/users/:id">
           <UserInfo userInfo={userInfo} />
         </Route>
         <Route path="/users">
-          <h2>Users</h2>
           <User />
         </Route>
         <Route path="/create">
@@ -156,13 +176,7 @@ const App = () => {
           <BlogInfo blogInfo={blogInfo}/>
         </Route>
         <Route path="/blogs">
-          {blog.sort(byLikes).map(blog =>
-            <Blog
-              key={blog.id}
-              blog={blog}
-              own={user.username===blog.user.username}
-            />
-          )}
+          <Blog />
         </Route>
       </Switch>
       

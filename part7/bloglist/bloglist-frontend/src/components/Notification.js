@@ -1,4 +1,5 @@
 import React from 'react'
+import { Alert } from 'react-bootstrap'
 import { connect } from 'react-redux'
 
 const Notification = (props) => {
@@ -6,16 +7,10 @@ const Notification = (props) => {
     return null
   }
 
-  const style = {
-    borderStyle: 'solid',
-    borderRadius: 5,
-    padding: 10,
-    color: props.notification.color === 'success' ? 'green' : 'red',
-    background: 'lightgrey'
-  }
-
-  return <div style={style}>
-    {props.notification.message}
+  return <div>
+    <Alert variant={props.notification.color}>
+      {props.notification.message}
+    </Alert>
   </div>
 }
 
