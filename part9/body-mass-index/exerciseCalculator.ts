@@ -7,6 +7,28 @@ interface ExerciseCalculator {
     target: number;
     average: number;    
 }
+
+interface Input {
+    day: number[];
+    target: number;
+}
+
+const parseArgument = (args: Array<string>): Input => {
+    if(args.length < 10) throw new Error('Not enough arguments');
+    if(args.length > 10) throw new Error('Too many arguments');
+    
+ 
+        if (!isNaN(Number(args[2])) && !isNaN(Number(args[3])) && !isNaN(Number(args[4])) && !isNaN(Number(args[5])) && !isNaN(Number(args[6])) && !isNaN(Number(args[7])) && !isNaN(Number(args[8])) && !isNaN(Number(args[9]))) {
+        return {
+            day: [Number(args[2]), Number(args[3]), Number(args[4]), Number(args[5]), Number(args[6]), Number(args[7]), Number(args[8])],
+            target: Number(args[9])
+        }
+      } else {
+        throw new Error('Provided values were not numbers!');
+      }
+}
+
+
 const calculateExercises = (day: number[], target: number) : ExerciseCalculator => {
     let trainingDays = 0;
     let total = 0;
@@ -22,6 +44,9 @@ const calculateExercises = (day: number[], target: number) : ExerciseCalculator 
         total += day[i];
     }
     average = total / 7;
+    if(average >= target) {
+        success = true;
+    }
 
     if(average < 1) {
         rating = 1;
@@ -49,7 +74,8 @@ const calculateExercises = (day: number[], target: number) : ExerciseCalculator 
 }
 
 try {
-    console.log(calculateExercises([3, 2, 0, 3, 2, 2, 0], 2));
+    const { day, target } = parseArgument(process.argv);
+    console.log(calculateExercises(day, target));
 } catch(e) {
     console.log(e)
 }
