@@ -11,13 +11,13 @@ const parseArguments = (args: Array<string>): Result => {
         return {
           height: Number(args[2]),
           weight: Number(args[3])
-        }
+        };
       } else {
         throw new Error('Provided values were not numbers!');
       }
-}
+};
 
-const calculatorBmi = (height: number, weight: number) => {
+export const calculatorBmi = (height: number, weight: number) => {
     const bmi = (weight / (height * height))*10000;
     let status = "";
     if(bmi < 18.5) {
@@ -30,7 +30,7 @@ const calculatorBmi = (height: number, weight: number) => {
     return {
         bmi,
         status
-    }
+    };
 };
 
 try {

@@ -22,14 +22,14 @@ const parseArgument = (args: Array<string>): Input => {
         return {
             day: [Number(args[2]), Number(args[3]), Number(args[4]), Number(args[5]), Number(args[6]), Number(args[7]), Number(args[8])],
             target: Number(args[9])
-        }
+        };
       } else {
         throw new Error('Provided values were not numbers!');
       }
-}
+};
 
 
-const calculateExercises = (day: number[], target: number) : ExerciseCalculator => {
+export const calculateExercises = (day: number[], target: number) : ExerciseCalculator => {
     let trainingDays = 0;
     let total = 0;
     let average = 0;
@@ -70,12 +70,12 @@ const calculateExercises = (day: number[], target: number) : ExerciseCalculator 
         ratingDescription,
         target,
         average
-    }
-}
+    };
+};
 
 try {
     const { day, target } = parseArgument(process.argv);
     console.log(calculateExercises(day, target));
 } catch(e) {
-    console.log(e)
+    console.log(e);
 }
