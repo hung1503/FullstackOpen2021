@@ -1,12 +1,12 @@
-import patientData from '../../data/patients.json';
+import patientData from '../../data/patients';
 import {v1 as uuid} from 'uuid';
 import { Patient, NonSsnPatient, NewPatientEntry } from '../types';
 
 const id = uuid();
 
-const patients: Array<Patient> = patientData;
+const patients: Array<Patient> = patientData as Array<Patient>;
 
-const getPatients = (): Patient[] => {
+const getPatients = (): Array<Patient> => {
     return patients;
 }
 
