@@ -1,0 +1,20 @@
+{
+  "name": "library-graphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "author": "Hung Nguyen",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^3.6.3",
+    "apollo-server-core": "^3.6.3",
+    "graphql": "^16.3.0",
+    "nodemon": "^2.0.15",
+    "uuid": "^8.3.2"
+  }
+}
