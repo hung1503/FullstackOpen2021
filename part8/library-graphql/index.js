@@ -121,7 +121,7 @@ const typeDefs = gql`
     ) : Book
     editAuthor(
       name: String!
-      born: Int
+      born: Int!
     ) : Author
   }
 `
@@ -159,6 +159,7 @@ const resolvers = {
       const result = Object.keys(countBooksByAuthor).map((key) => {
         return {
           name: key,
+          born: authors.find(author => author.name === key).born,
           bookCount: countBooksByAuthor[key]
         }
       })
