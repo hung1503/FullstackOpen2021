@@ -31,9 +31,20 @@ const App = () => {
       name: newName,
       number: newNumber
     }
-    if(newNumber.length < 3){
+    if(newName.length < 3){
       setNoti({
-        text: `${newName} is too short, please provide a name with at least 3 digits`,
+        text: `Name is too short, please provide a name with at least 3 digits`,
+        type: "error"
+      })
+      setTimeout(() => {
+        setNoti(null);
+      }, 5000);
+      return;
+    } 
+
+    if(newNumber.length < 8) {
+      setNoti({
+        text: `number is too short, please provide a number with at least 8 digits`,
         type: "error"
       })
       setTimeout(() => {
@@ -46,7 +57,7 @@ const App = () => {
     if(foundId) {
       const newNum = {...foundId, number: listObj.number} ;
 
-      if(newNumber < 8) {
+      if(newNumber.length < 8) {
         setNoti({
           text: `number is too short, please provide a number with at least 8 digits`,
           type: "error"
